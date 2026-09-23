@@ -1,0 +1,883 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Design tokens — Art Direction Brief (Sidnei Rodrigues LP)
+   Fonte da verdade: UI & Design Systems Lead. Não alterar
+   valores aqui sem handoff formal de mudança de design.
+   ============================================================ */
+:root {
+  /* --- Cor: paleta bruta --- */
+  --navy-950: #0a131f;
+  --cyan-950: #00303b;
+  --gray-950: #14171a;
+
+  --navy-900: #0f1b2b;
+  --navy-800: #16283d;
+  --cyan-500: #00acd4;
+  --navy-700: #1e3550;
+  --cyan-400: #33c0df;
+  --navy-600: #274364;
+  --cyan-300: #66d3e7;
+  --navy-500: #34557c;
+  --cyan-100: #ccf0f7;
+  --navy-300: #7591af;
+  --navy-100: #d2dee9;
+  --navy-50: #eef3f8;
+
+  --amber-600: #c9a800;
+  --amber-500: #f6d309;
+  --amber-300: #fae45e;
+  --amber-100: #fdf3b8;
+
+  --gray-700: #3d444b;
+  --gray-400: #999999;
+  --gray-200: #d0d0d0;
+  --gray-100: #e6e6e6;
+
+  --paper-50: #f8f9fb;
+  --ink-950: #140e0c;
+
+  --gradient-institutional: linear-gradient(135deg, #0f1b2b 0%, #00acd4 100%);
+
+  /* --- Cor: tokens semânticos --- */
+  --surface-page: var(--navy-900);
+  --surface-raised: var(--navy-800);
+  --surface-sunken: var(--navy-950);
+  --surface-light: var(--paper-50);
+  --surface-light-raised: #ffffff;
+  --ink: var(--ink-950);
+  --on-dark: var(--paper-50);
+  --on-dark-70: rgba(248, 249, 251, 0.7);
+  --on-dark-muted: var(--gray-200);
+  --action: var(--cyan-500);
+  --action-hover: var(--cyan-400);
+  --accent-key: var(--amber-500);
+  --border-dark: rgba(248, 249, 251, 0.12);
+  --border-light: rgba(20, 14, 12, 0.1);
+  --focus-ring: var(--cyan-300);
+  /* Adicionado nesta entrega (seções 3-10): eyebrow sobre --surface-light
+     precisa de mais contraste que --cyan-300/--cyan-500 oferecem em texto
+     pequeno (12px) — cyan-500 sobre --paper-50 mede ~2.5:1, abaixo do AA
+     4.5:1. --navy-700 mede ~11.8:1, então vira o token semântico de
+     eyebrow em fundo claro, mantendo a paleta já aprovada. */
+  --eyebrow-on-light: var(--navy-700);
+
+  /* --- Tipografia --- */
+  /* Evolução de UI (Caio, 2026-09-09): DM Sans no site todo,
+     substituindo o par Sora/Inter — uma família só, papéis distintos
+     resolvidos por peso/tracking, não por troca de família. */
+  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --type-eyebrow-size: 13px;
+  --type-eyebrow-tracking: 0.16em;
+  --type-h1-size: clamp(34px, 4.2vw, 58px);
+  --type-h2-size: clamp(32px, 3.8vw, 52px);
+  --type-h3-size: clamp(22px, 1.9vw, 28px);
+  --type-stat-size: clamp(36px, 4.5vw, 64px);
+  --type-body-lg-size: 20px;
+  --type-body-size: 18px;
+  /* Adicionado nesta entrega (Gate 2 — Hero + Faixa de Números,
+     direção "Horizonte de Decisão" aprovada no Gate 1): tokens novos
+     de tipografia medidos no protótipo aprovado (viewport de
+     referência 1425x900). --type-h1-size e --type-stat-size são
+     correções formais dos tokens JÁ existentes (só usados no H1 do
+     Hero e no numeral da Faixa de Números, respectivamente — nenhuma
+     outra seção os consome, confirmado por busca no código), não uma
+     invenção paralela. --type-lede-size é NOVO: a frase-propósito do
+     Hero na nova direção precisa de uma escala maior que
+     --type-body-lg-size (18px fixo), que continua em uso inalterado
+     em about.tsx/press-kit.tsx/section-heading.tsx — reaproveitá-lo
+     aqui quebraria essas 3 seções fora do escopo desta fatia.
+
+     CORREÇÃO (revisão pós Gate-2, crítica visual `impeccable`
+     dual-agent — REVISION REQUIRED BEFORE HUMAN GATE): o teto anterior
+     de --type-h1-size (168px, ~138px computado em 1440px de largura)
+     violava a regra geral não-negociável da própria skill de crítica
+     usada nesta revisão ("Hero/display heading ceiling: clamp() max
+     ≤ 6rem/~96px"), causando um Hero ~196px mais alto que 100vh no
+     desktop (vão morto de tela cheia entre Hero e Faixa de Números) e
+     ghosting do H1 atrás do header sticky/translúcido durante o
+     scroll. Teto reduzido para 96px (6rem), fórmula ajustada
+     proporcionalmente (mín. 40px, slope 7vw) — mantém a lógica
+     responsiva, só reduz o teto e, como consequência desejada,
+     também reduz o tamanho mínimo em mobile (390px), o que reduz a
+     altura do bloco de conteúdo nesse viewport e ajuda a evitar a
+     colisão com a legenda do placeholder de foto (ver hero.tsx). */
+  /* Escala aumentada (Caio, 2026-09-09 — "é um site maximalismo, pode
+     aumentá-las"): tetos elevados em toda a escala de destaque, DM
+     Sans (mais largo/geométrico que Sora) compensado com tracking
+     ligeiramente mais negativo nos headings maiores (ver .text-h1/
+     .text-stat abaixo). */
+  --type-h1-size: clamp(44px, 7.8vw, 116px);
+  /* V7 (Caio, 2026-09-09): título do Hero, menor que a escala geral —
+     a coluna de texto do Hero também encolheu de 78% para 52% da
+     largura (ver hero.tsx) para não invadir a foto na costura. */
+  /* V15 (Caio, 2026-09-15 — "aumente um pouco a fonte do texto [da
+     hero]... sem que ultrapasse os limites da imagem"): teto elevado de
+     64px para 72px, mínimo de 36px para 38px — a coluna de texto
+     permanece em lg:max-w-[52%] (inalterada), com folga antes da
+     costura em --cut:58%. */
+  /* V18 (Caio, 2026-09-15 — "faltou aumentar a fonte do título da hero...
+     é maximalismo, esqueceu? ... deve estar maior e preenchendo mais
+     espaço"): a V15 foi um aumento tímido demais para o pedido real —
+     teto sobe de 72px para 108px (perto da escala geral --type-h1-size,
+     116px), mínimo de 38px para 48px. A coluna de texto (hero.tsx)
+     também alarga de lg:max-w-[52%] para lg:max-w-[58%] para dar espaço
+     real ao texto maior — medido nesta rodada contra a costura
+     (--cut:58% do Hero) para confirmar que o H1 ainda não a alcança nas
+     larguras testadas (1440px). */
+  --type-hero-h1-size: clamp(48px, 7.2vw, 108px);
+  --type-lede-size: clamp(28px, 3.4vw, 58px);
+  /* CORREÇÃO (Caio, 2026-09-09, segunda rodada): o teto anterior de
+     --type-stat-size (156px) causava quebra de linha nos numerais da
+     Faixa de Números dentro do grid de 5 colunas a 1440px —
+     desproporcional ao rótulo abaixo. Token dedicado, exclusivo dessa
+     seção (nenhuma outra consome --type-stat-size), calibrado para
+     caber em uma linha nas larguras testadas. */
+  /* V21 (Caio, 2026-09-15 — "aumente os textos dos grandes números...
+     pode aumentar 2 de tamanho"): clamp(34px,3.4vw,58px) ->
+     clamp(40px,4.2vw,70px). */
+  --type-stat-band-size: clamp(40px, 4.2vw, 70px);
+
+  /* V7 — segundo aumento explícito (Caio, 2026-09-09, pedido pela
+     terceira vez nesta entrega): "aumente o tamanho das fontes do site
+     inteiro... só deixe as fontes dos grandes números e do título da
+     hero do jeito que está". --type-stat-band-size (acima) e
+     --type-hero-h1-size (acima) ficam de fora deste bloco de propósito
+     — são os dois exatamente exceptuados. Todo o resto da escala de
+     texto corrido/heading de seção sobe mais uma vez aqui. */
+  --type-h2-size: clamp(36px, 4.4vw, 60px);
+  --type-h3-size: clamp(24px, 2.2vw, 34px);
+  --type-body-lg-size: 22px;
+  --type-body-size: 19px;
+
+  /* Modal de Temas de Palestra (Caio, 2026-09-15 — "aumente um pouco a
+     fonte do título"): --type-h3-size (34px máx) e --type-h2-size
+     (46-76px, ver abaixo) não têm nenhum degrau entre eles — h2 já
+     causou overflow real do modal numa rodada anterior (título sozinho
+     ocupando ~390px de altura, ver comentário V25 em
+     speaking-topics.tsx). Token dedicado, um degrau acima de h3, bem
+     abaixo do piso de h2 — orientação de UI & Design Systems Lead. */
+  /* Atualização de conteúdo (Caio, 2026-09-23 — "já que temos menos
+     textos agora, faça um bom uso do tamanho de fontes de título e
+     subtítulo para o modal, para que fique preenchido"): os 3 temas
+     ganharam títulos/descrições reais e mais curtos que o conteúdo
+     anterior, deixando a coluna de texto do modal com espaço sobrando.
+     `--type-h3-modal-size` sobe um degrau (piso/teto +4px) e a
+     descrição ganha um token dedicado maior que `--type-body-lg-size`
+     (22px fixo, usado em todo o site) — sem alterar esse token
+     compartilhado, só a descrição do modal. */
+  --type-h3-modal-size: clamp(30px, 2.8vw, 44px);
+  --type-body-modal-size: clamp(20px, 1.7vw, 25px);
+
+  /* V10 (Caio, 2026-09-09) — "aumente o tamanho dos textos de títulos
+     de sessão e subtítulos": mais um aumento, desta vez focado no par
+     eyebrow+título+descrição do `SectionHeading` (usado por toda
+     seção). --type-hero-h1-size e --type-stat-band-size seguem de
+     fora, mesma exceção de sempre. */
+  --type-eyebrow-size: 15px;
+  --type-h2-size: clamp(42px, 5vw, 68px);
+  --type-body-lg-size: 25px;
+
+  /* V11 (Caio, 2026-09-09) — "no geral, aumente o tamanho dos textos de
+     todos os nomes de sessões, seus respectivos títulos e subtítulos":
+     mais um aumento sobre o mesmo par eyebrow+H2+descrição, terceira
+     rodada consecutiva de pedido idêntico. Mesma exceção de sempre
+     (--type-hero-h1-size / --type-stat-band-size ficam de fora). */
+  --type-eyebrow-size: 17px;
+  --type-h2-size: clamp(46px, 5.6vw, 76px);
+  --type-body-lg-size: 27px;
+
+  /* --- Raio --- */
+  --radius-field: 10px;
+  --radius-card: 18px;
+  --radius-block: 25px;
+  --radius-pill: 999px;
+
+  /* --- Composição diagonal "Horizonte de Decisão" (Gate 1, Probe C) ---
+     --cut-tilt é o deslocamento horizontal do topo à base da costura
+     (determina o ângulo visual, ~12-18°); --cut é definido por seção
+     via classe local (.diagonal-hero / .diagonal-stats), nunca aqui,
+     porque o valor diverge por seção (58% Hero, 40% Faixa de Números,
+     invertida). */
+  --cut-tilt: 11%;
+
+  /* --- Motion --- */
+  --motion-fast: 0.15s;
+  --motion-base: 0.24s;
+  --motion-slow: 0.42s;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Mapeamento shadcn (para o Button/UI kit reaproveitarem os tokens) --- */
+  --background: var(--surface-page);
+  --foreground: var(--on-dark);
+  --primary: var(--action);
+  --primary-foreground: var(--surface-page);
+  --ring: var(--focus-ring);
+  --radius: var(--radius-field);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --card: var(--surface-raised);
+  --card-foreground: var(--on-dark);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--on-dark);
+  --secondary: var(--navy-800);
+  --secondary-foreground: var(--on-dark);
+  --muted: var(--navy-800);
+  --muted-foreground: var(--on-dark-muted);
+  --accent: var(--navy-700);
+  --accent-foreground: var(--on-dark);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--border-dark);
+  --input: var(--border-dark);
+  --chart-1: var(--cyan-500);
+  --chart-2: var(--navy-500);
+  --chart-3: var(--amber-500);
+  --chart-4: var(--navy-300);
+  --chart-5: var(--cyan-300);
+  --sidebar: var(--surface-raised);
+  --sidebar-foreground: var(--on-dark);
+  --sidebar-primary: var(--action);
+  --sidebar-primary-foreground: var(--surface-page);
+  --sidebar-accent: var(--navy-700);
+  --sidebar-accent-foreground: var(--on-dark);
+  --sidebar-border: var(--border-dark);
+  --sidebar-ring: var(--focus-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+}
+
+/* ============================================================
+   Utilitários de tokens (fora do sistema de cor shadcn, para uso
+   direto nas seções que não seguem o esquema primary/secondary)
+   ============================================================ */
+@layer utilities {
+  .text-eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--type-eyebrow-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--type-eyebrow-tracking);
+  }
+  .text-h1 {
+    font-family: var(--font-display);
+    font-size: var(--type-h1-size);
+    font-weight: 700;
+    /* Gate 2 (Horizonte de Decisão): line-height/letter-spacing
+       atualizados junto do tamanho medido — mesma correção formal. */
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+  }
+  /* V7 (Caio, 2026-09-09): classe própria do H1 do Hero, deliberadamente
+     separada de --type-h1-size/.text-h1 — menor, para não invadir a
+     foto na costura, e explicitamente excluída do aumento geral de
+     fonte pedido na mesma rodada ("só deixe... o título da hero do
+     jeito que está"). Nenhum outro elemento do site consome esta
+     classe. */
+  .text-hero-h1 {
+    font-family: var(--font-display);
+    font-size: var(--type-hero-h1-size);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  /* Novo nesta entrega: frase-propósito do Hero na direção aprovada no
+     Gate 1. Não reaproveita .text-body-lg (18px fixo) porque essa
+     classe já está em uso em 3 seções fora do escopo desta fatia
+     (about.tsx, press-kit.tsx, section-heading.tsx) e mudar seu
+     tamanho as afetaria silenciosamente. */
+  .text-lede {
+    font-family: var(--font-body);
+    font-size: var(--type-lede-size);
+    line-height: 1.1;
+    font-weight: 600;
+  }
+  /* Adicionado nesta entrega: nenhuma das 2 seções da fatia anterior
+     (Hero, Faixa de Números) precisava de título de seção — só H1 (único,
+     Hero) e numeral (--type-stat-size). As 8 seções novas precisam de um
+     H2 de seção e um H3 de card, então a escala é estendida (não
+     alterada) seguindo o mesmo padrão de --type-h1-size. */
+  .text-h2 {
+    font-family: var(--font-display);
+    font-size: var(--type-h2-size);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .text-h3 {
+    font-family: var(--font-display);
+    font-size: var(--type-h3-size);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .text-h3-modal {
+    font-family: var(--font-display);
+    font-size: var(--type-h3-modal-size);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .text-body-modal {
+    font-family: var(--font-body);
+    font-size: var(--type-body-modal-size);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .text-stat {
+    font-family: var(--font-display);
+    font-size: var(--type-stat-size);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .text-stat-band {
+    font-family: var(--font-display);
+    font-size: var(--type-stat-band-size);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .text-body-lg {
+    font-family: var(--font-body);
+    font-size: var(--type-body-lg-size);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .text-body {
+    font-family: var(--font-body);
+    font-size: var(--type-body-size);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .bg-gradient-institutional {
+    background: var(--gradient-institutional);
+  }
+}
+
+/* ============================================================
+   Skip-link (acessibilidade — padrão de engenharia importado do
+   benchmark 3 Lírios, cores próprias desta paleta). Primeiro filho
+   focável do body (ver app/layout.tsx); invisível fora de :focus,
+   aparece fixo no canto superior esquerdo ao navegar por teclado.
+   ============================================================ */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  border-radius: var(--radius-pill);
+  background: var(--action);
+  color: var(--surface-page);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: top var(--motion-base) var(--ease-out-soft);
+}
+.skip-link:focus-visible {
+  top: 12px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   "Horizonte de Decisão" (Gate 1, Probe C — aprovado em substituição
+   ao corte diagonal simples + hairline anterior). Costura diagonal
+   full-bleed que atravessa a composição do Hero e reaparece,
+   invertida, na Faixa de Números.
+
+   --cut é definido por seção via classe local (.diagonal-hero /
+   .diagonal-stats), nunca aqui. --cut-tilt (raiz, acima) controla o
+   deslocamento horizontal do topo à base da costura — mesmo valor
+   nas duas seções, só o sinal (subtração/soma) inverte a direção do
+   ângulo.
+
+   Nota de proveniência (nav-height): o brief lista "Nav: 72px (já
+   existe)" como SOURCE TRUTH, mas o header real deste projeto
+   (components/site-header.tsx) mede 64px (h-16). Contradição
+   detectada entre a fonte prosa do brief e o código real — resolvida
+   a favor do código real (hierarquia de evidências: implementação
+   existente > suposição não validada em prosa), registrada aqui e no
+   relatório desta entrega, não decidida silenciosamente por
+   estimativa. --nav-h abaixo usa o valor medido real.
+   ============================================================ */
+.diagonal-hero {
+  --cut: 58%;
+  /* V21 (Caio, 2026-09-15 — "aumente a altura da navbar por 16
+     pixels"): site-header.tsx sobe de h-16 (64px) para h-20 (80px);
+     --nav-h atualizado junto para o Hero continuar medindo a partir da
+     altura real do header. */
+  --nav-h: 80px;
+}
+.diagonal-stats {
+  --cut: 40%;
+}
+
+/* ============================================================
+   Extensão da costura "Horizonte de Decisão" às 9 seções restantes
+   (Sublote Frontend Engineering Lead, 2026-09-08 — addendum de
+   enriquecimento sobre o Gate 1/Gate 2 já aprovados). --cut alterna de
+   lado a cada seção para criar ritmo contínuo ao longo da rolagem;
+   --cut-tilt (raiz) permanece o mesmo em todas. Cada seção usa a classe
+   local correspondente + .diagonal-wedge ou .diagonal-wedge-inverted
+   (nunca os dois na mesma seção) para escolher o lado.
+   ============================================================ */
+.diagonal-about {
+  /* V11 (Caio, 2026-09-09 — "coloque a linha que separa o azul claro do
+     azul escuro mais a esquerda. está ruim de ler o texto em branco com
+     o fundo azul claro"): reduzido de 50% para 36% — a zona clara do
+     gradiente (perto de --cut) fica confinada ao painel de foto (44% da
+     seção), sem alcançar a coluna de texto à direita. */
+  --cut: 36%;
+}
+.diagonal-temas {
+  --cut: 22%;
+}
+.diagonal-atuacao {
+  --cut: 78%;
+}
+.diagonal-contato {
+  --cut: 64%;
+}
+/* Flourish de fundo confinado da Captação (ver lead-capture.tsx) — o
+   wrapper tem a própria largura (38% da seção), então precisa do
+   próprio --cut local (não herda .diagonal-hero/etc., nenhuma seção
+   pai define --cut aqui). Sem esta classe, --cut fica indefinido e o
+   clip-path do wedge falha silenciosamente (bug encontrado na
+   verificação de preview desta entrega). */
+.diagonal-captacao-flourish {
+  --cut: 45%;
+}
+
+/* Régua estrutural fina no topo (Temas de Palestra / Áreas de Atuação —
+   seções com grid/lista densa, onde a costura recua para uma faixa
+   confinada em vez de campo full-bleed, conforme a tabela de
+   densidade do brief). Mesma técnica de .diagonal-stats (banda
+   confinada + hachura), altura maior (18vh vs 140px da Faixa de
+   Números) porque a régua aqui é só um separador de cabeçalho, sem
+   numerais sobrepostos. */
+/* Reduzido drasticamente (Caio, 2026-09-09, segunda rodada — "deixe
+   bem pouco espaço entre TODAS AS SESSÕES", com prints mostrando essa
+   régua como o maior vão vazio entre seções): de 18vh/120-220px para
+   uma faixa fina fixa — ainda lê como separador estrutural, não mais
+   como um vão de tela cheia entre o conteúdo de duas seções. */
+.seam-ruler {
+  height: 40px;
+}
+
+/* Fundo estrutural suavizado atrás do retrato (Sobre/Autoridade):
+   mesmo .diagonal-field, opacidade reduzida via wrapper (classe
+   utilitária Tailwind aplicada no componente, não um token novo) para
+   que o texto da bio (longa, ao lado) permaneça em alto contraste. */
+
+/* Variantes espelhadas de .diagonal-wedge/.diagonal-wedge-inverted —
+   o par original sempre recorta o campo do lado DIREITO da seção
+   (mesmo lado do retrato/campo do Hero e da Faixa de Números). Sobre/
+   Autoridade posiciona o retrato à ESQUERDA (decisão de conteúdo já
+   existente, fora do escopo desta entrega mudar), então precisa do
+   campo recortado do lado esquerdo para ficar de fato "atrás do
+   retrato" (correção de bug visual encontrada na verificação de
+   preview desta entrega — a 1ª versão usava .diagonal-wedge-inverted
+   sem espelhar, e o campo cyan aparecia atrás do texto/logos à
+   direita, não atrás da foto à esquerda). Mesmas variáveis --cut/
+   --cut-tilt, só o lado do polígono é espelhado. */
+.diagonal-wedge-left {
+  clip-path: polygon(
+    0% 0%,
+    var(--cut) 0%,
+    calc(var(--cut) - var(--cut-tilt)) 100%,
+    0% 100%
+  );
+}
+.diagonal-wedge-left-inverted {
+  clip-path: polygon(
+    0% 0%,
+    var(--cut) 0%,
+    calc(var(--cut) + var(--cut-tilt)) 100%,
+    0% 100%
+  );
+}
+
+/* Linha de transição fina (Prova Social — borda superior/inferior;
+   Press Kit — linha de identidade mínima no topo). Reaproveita as
+   cores/glow já definidas em .diagonal-seam, mas como barra reta
+   (nunca clipada em diagonal) — "corpo neutro", sem campo/gradiente
+   por trás. */
+.seam-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--navy-700) 0%,
+    var(--cyan-500) 50%,
+    var(--navy-700) 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(0, 172, 212, 0.35));
+}
+
+/* Marca de registro técnico ("+" nos 4 cantos) — Sobre/Autoridade
+   (retrato) e Prova Social (1º/maior card de vídeo). Braço ~14px,
+   1px, --cyan-500 a 35% opacidade (uso exclusivo sobre fundo escuro
+   nesta entrega — nenhuma seção clara usa a marca). Oculta abaixo de
+   640px (ver componente RegistrationMarks: bloco anfitrião mobile não
+   tem respiro suficiente para o offset de 8-12px fora da borda). */
+.registration-arm {
+  position: absolute;
+  background: rgba(0, 172, 212, 0.35);
+}
+
+/* Wordmark monumental de transição (Prova Social + Captação — teto de
+   2 ocorrências no total, ver componente MonumentalWordmark). Cor
+   subordinada (opacidade 10-15%), nunca --action/--accent-key, para
+   nunca competir com o H2 real da seção. */
+.wordmark-monumental {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: clamp(56px, 13vw, 240px);
+  opacity: 0.12;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Numeral da lista numerada editorial (Temas de Palestra / Áreas de
+   Atuação). Cinza claro deliberado (nunca --cyan-500/--accent-key — o
+   accent fica reservado para a costura e estados, conforme addendum) —
+   token novo de tamanho porque nenhuma escala existente (--type-h3 a
+   20-24px, --type-stat a 56-132px) cobre a faixa 40-56px pedida
+   especificamente para este elemento. */
+.text-numeral {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(40px, 4.5vw, 56px);
+  color: var(--gray-200);
+}
+
+/* Altura mínima do Hero contando a navbar real (correção do "vazio de
+   topo" apontado no Gate 1: min-height nunca depende de justify-end
+   empurrando o conteúdo para o rodapé do viewport).
+
+   V8 (Caio, 2026-09-09): uma tentativa de reduzir para 88vh +
+   centralizar o conteúdo verticalmente foi revertida a pedido explícito
+   de Caio na rodada seguinte ("não gostei de nada que fez, volte para
+   como estava anteriormente") — de volta a 100vh.
+
+   V10 (Caio, 2026-09-09): "remova o espaço vazio entre o botão amarelo
+   da hero e 'Instituições e parceiros'" — o mesmo vão morto identificado
+   em V8 continuava lá (o conteúdo do Hero é mais curto que 100vh -
+   navH desde que o helper de WhatsApp saiu em V5 e o título encolheu em
+   V7). Desta vez, pedido explicitamente de novo — 88vh + centralização
+   vertical do conteúdo (ver hero.tsx) voltam. */
+.hero-min-h {
+  min-height: calc(88vh - var(--nav-h, 64px));
+}
+
+/* Cunha diagonal genérica (photo field / campo institucional). Aplica
+   clip-path ao próprio elemento — isso clipa também todo o conteúdo
+   descendente (gradiente, vinheta, placeholder), então uma única
+   classe é reaproveitada em várias camadas empilhadas. */
+.diagonal-wedge {
+  clip-path: polygon(
+    var(--cut) 0%,
+    100% 0%,
+    100% 100%,
+    calc(var(--cut) - var(--cut-tilt)) 100%
+  );
+}
+/* Direção oposta (Faixa de Números — "invertida" conforme o brief). */
+.diagonal-wedge-inverted {
+  clip-path: polygon(
+    var(--cut) 0%,
+    100% 0%,
+    100% 100%,
+    calc(var(--cut) + var(--cut-tilt)) 100%
+  );
+}
+
+/* Camada do campo diagonal (gradiente #0F1B2B -> #00ACD4). Curva
+   acelerada perto da borda cyan (estágios concentrados no terço
+   final) + vinheta escura confinada à extremidade institucional via
+   ::before (mesmo clip-path do pai, herdado automaticamente porque o
+   pseudo-elemento é descendente do wedge clipado) — corrige o bug de
+   contraste do protótipo descartável (~10% de diferença de luminância
+   entre extremos visíveis vira ~25-30%). */
+.diagonal-field {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    #0f1b2b 0%,
+    #102c42 20%,
+    #0c6f92 58%,
+    #00acd4 100%
+  );
+}
+.diagonal-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.08) 28%,
+    transparent 52%
+  );
+}
+
+/* Duotone de marca sobre fotografia real (evolução de UI 2026-09-09,
+   Hero) — mantém a paleta navy/cyan já aprovada como identidade sobre
+   uma foto de ambiente real em vez de abandoná-la por tons de pele/
+   cenário genéricos. Escuro perto da costura (onde o H1 cruza o
+   campo, exige contraste alto) -> cyan translúcido perto da borda
+   direita (eco do .diagonal-field original). */
+.hero-photo-duotone {
+  background: linear-gradient(
+    100deg,
+    rgba(10, 19, 31, 0.94) 0%,
+    rgba(15, 27, 43, 0.6) 24%,
+    rgba(4, 79, 102, 0.32) 56%,
+    rgba(0, 172, 212, 0.16) 100%
+  );
+}
+
+/* Figura em primeiro plano (recorte com fundo transparente, fornecido
+   nesta entrega — fotos reais de Sidnei). object-fit: contain (nunca
+   cover) preserva a proporção real do recorte em vez de forçar
+   preenchimento; ancorada à base do contêiner pai para ler como uma
+   figura "de pé dentro" do campo diagonal/gradiente por trás, no
+   mesmo espírito do padrão já usado nos probes de Gate 1 ("retrato em
+   primeiro plano sobre o campo de cor"). Substitui o placeholder de
+   ícone Camera onde uma foto real já existe. */
+.figure-cutout {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  pointer-events: none;
+}
+
+/* Linha de costura (2-3px, navy -> cyan -> navy, leve glow). Mesma
+   técnica de "hairline atrás + camada inset na frente" já usada em
+   .hero-photo-clip na rodada anterior (reaproveitada, não reinventada):
+   a camada de baixo (sem inset) fica visível só na faixa de ~2-3px que
+   a camada de cima (deslocada) não cobre. */
+.diagonal-seam {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--navy-700) 0%,
+    var(--cyan-500) 50%,
+    var(--navy-700) 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(0, 172, 212, 0.45));
+}
+
+/* Faixa de hachuras confinada ao redor da costura da Faixa de Números
+   (120-160px), atrás do texto (z-index inferior). Extensão do mesmo
+   grafismo de .surface-hachure já aprovado (Press Kit), só que
+   inclinado para acompanhar a direção da costura em vez de um ângulo
+   fixo genérico. */
+.stats-seam-hachure {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    100deg,
+    var(--border-light) 0px,
+    var(--border-light) 1px,
+    transparent 1px,
+    transparent 24px
+  );
+  opacity: 0.9;
+}
+
+/* Removido nesta entrega: .hero-photo-clip (corte diagonal simples +
+   hairline da direção anterior). Confirmado por busca no código que só
+   era consumido por hero.tsx — substituído integralmente pela costura
+   "Horizonte de Decisão" acima. Nenhum outro componente o referenciava
+   (about.tsx usa --radius-block para o próprio painel de foto,
+   deliberadamente, conforme comentário já existente nesse arquivo). */
+
+/* ============================================================
+   Numeral placeholder (Faixa de Números + chip do Hero).
+   Política obrigatória: nenhuma métrica real confirmada ainda,
+   então todo numeral é traço vazado, nunca sólido, sempre
+   acompanhado de rótulo "em atualização" no HTML ao redor.
+   -webkit-text-stroke tem fallback (cor sólida + baixa opacidade)
+   para navegadores sem suporte.
+   ============================================================ */
+.numeral-placeholder {
+  color: var(--cyan-500);
+  opacity: 0.32;
+}
+@supports (-webkit-text-stroke: 1px black) {
+  .numeral-placeholder {
+    color: transparent;
+    opacity: 1;
+    -webkit-text-stroke-color: var(--cyan-500);
+    -webkit-text-stroke-width: 1.75px;
+  }
+}
+
+/* ============================================================
+   Grafismo de hachura diagonal (Art Direction Brief: "textura de
+   fundo em zonas vazias de superfícies escuras — nunca atrás de
+   texto denso"). Usado no Press Kit para diferenciar visualmente
+   sua superfície da de Contato mesmo reaproveitando o mesmo token
+   --surface-sunken (sem introduzir uma 4ª cor fora da paleta
+   aprovada) — resolve a repetição de bloco escuro só por
+   composição, conforme pedido. z-index: -1 mantém a textura atrás
+   do conteúdo em fluxo normal; a máscara linear evita a textura
+   nas bordas de emenda com as seções vizinhas.
+   ============================================================ */
+.surface-hachure {
+  position: relative;
+  isolation: isolate;
+}
+.surface-hachure::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--border-dark) 0px,
+    var(--border-dark) 1px,
+    transparent 1px,
+    transparent 16px
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 20%,
+    black 80%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 20%,
+    black 80%,
+    transparent
+  );
+}
+
+/* ============================================================
+   Reveal-on-scroll (fade + translateY, sem spring). Ativado via
+   IntersectionObserver no client (ver components/reveal.tsx).
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--motion-base) var(--ease-out-soft),
+    transform var(--motion-base) var(--ease-out-soft);
+}
+
+[data-reveal="in"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transform: none;
+    transition: opacity var(--motion-fast) linear;
+  }
+}
+
+/* ============================================================
+   Marquee infinito (carrossel de logos institucionais, evolução de UI
+   2026-09-09). A faixa renderizada é 2 cópias lado a lado; -50% desloca
+   exatamente uma cópia, criando o loop sem salto perceptível.
+   ============================================================ */
+.logo-marquee-track {
+  animation: logo-marquee 34s linear infinite;
+}
+@keyframes logo-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track {
+    animation: none;
+  }
+}
