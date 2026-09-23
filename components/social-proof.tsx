@@ -12,11 +12,17 @@ const VIDEOS: readonly {
 }[] = [
   {
     label: "Urban Tech Forum / ACATE (2025)",
-    photo: "/images/event/keynote.jpg",
+    photo: "/images/event/thumb-urban-tech-forum-acate-2025.png",
     videoSrc: "/videos/urban-tech-forum-acate-2025.mp4",
   },
-  { label: "CONVENSI (Foz do Iguaçu, 2026)", photo: "/images/event/stage-wide.jpg" },
-  { label: "Empreende Brazil (2025)", photo: "/images/event/stage-alt.jpg" },
+  {
+    label: "CONVENSI (Foz do Iguaçu, 2026)",
+    photo: "/images/event/thumb-convensi-foz-2026.png",
+  },
+  {
+    label: "Empreende Brazil (2025)",
+    photo: "/images/event/thumb-empreende-brazil-2025.png",
+  },
 ];
 
 /**
@@ -37,6 +43,13 @@ const VIDEOS: readonly {
  *
  * Depoimentos, galeria e imprensa seguem 100% pendentes (Seção 9/11 do
  * plano) — ocultos enquanto `SOCIAL_PROOF_EXTRAS_CONFIRMED` for `false`.
+ *
+ * V16 (Caio, 2026-09-23 — thumbnails reais dos 3 vídeos, de
+ * F:\TD Business\Landing Page Sidnei\Fotos\Thumbnails): cada `photo`
+ * trocado do placeholder genérico (`keynote.jpg`/`stage-wide.jpg`/
+ * `stage-alt.jpg`, ainda usados por hero.tsx e service-areas.tsx) para
+ * um arquivo dedicado em `public/images/event/thumb-*.png`, casado pelo
+ * nome do evento com o vídeo correspondente.
  *
  * V15 (Caio, 2026-09-15 — "não quebre o texto, deixe o título todo na
  * mesma linha"): o `<h2>` do `SectionHeading` carregava `max-w-3xl`
