@@ -52,6 +52,16 @@ import {
 // Atualização de conteúdo (Caio, 2026-09-23): os 3 temas passam a ter
 // título e descrição reais fornecidos por Caio, substituindo o
 // conteúdo anterior (incluindo o placeholder lorem ipsum do Tema 3).
+//
+// Troca de capas (Caio, 2026-09-23 — "temos novas capas"): os 3
+// arquivos em public/images/temas/tema-{1,2,3}.png são substituídos
+// pelas novas capas fornecidas (mesmo nome de arquivo, só o conteúdo
+// da imagem muda — nenhuma alteração de caminho aqui). As versões
+// "-sem-texto" usadas no modal não foram tocadas (Caio só mencionou
+// capas). CTA "Ver mais": fonte sobe de text-sm para text-base
+// ("deixe-o com a fonte um pouquinho maior"); o ícone da seta
+// (`ArrowUpRight`, lucide-react) já era Lucide e já tinha o ângulo
+// diagonal pedido — nenhuma troca de ícone foi necessária.
 const TOPICS = [
   {
     value: "governanca-ia",
@@ -147,7 +157,7 @@ export function SpeakingTopics() {
                         pedido explicitamente só para este botão. */}
                     <span
                       aria-hidden="true"
-                      className="absolute bottom-5 left-5 z-[1] inline-flex items-center gap-2 rounded-[12px] bg-[var(--on-dark)]/25 px-7 py-3.5 text-sm font-semibold text-[var(--on-dark)] backdrop-blur-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:bg-[var(--on-dark)]/35"
+                      className="absolute bottom-5 left-5 z-[1] inline-flex items-center gap-2 rounded-[12px] bg-[var(--on-dark)]/25 px-7 py-3.5 text-base font-semibold text-[var(--on-dark)] backdrop-blur-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:bg-[var(--on-dark)]/35"
                     >
                       Ver mais
                       <ArrowUpRight
