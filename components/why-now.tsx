@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import Image from "next/image";
 import { BarChart3, ShieldCheck, Workflow, Target, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
@@ -221,14 +222,36 @@ export function WhyNow() {
       className="relative border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-14 lg:flex-row lg:items-center lg:gap-12">
-        <SectionHeading
-          tone="light"
-          eyebrow="Por que agir agora"
-          title="Estratégia, dados e decisão caminham juntos."
-          description="A tecnologia avançou, a forma de decidir precisa acompanhar. IA, dados e estratégia mudaram a forma de liderar e entender isso é o primeiro passo"
-          gap="gap-6"
-          className="lg:w-[40%]"
-        />
+        <div className="flex flex-col gap-8 lg:w-[40%]">
+          <SectionHeading
+            tone="light"
+            eyebrow="Por que agir agora"
+            title="Estratégia, dados e decisão caminham juntos."
+            description="A tecnologia avançou, a forma de decidir precisa acompanhar. IA, dados e estratégia mudaram a forma de liderar e entender isso é o primeiro passo"
+            gap="gap-6"
+          />
+          {/* Foto abaixo do subtítulo (Caio, 2026-09-23 — "acho que
+              podemos encaixar uma imagem abaixo do subtítulo", arquivo
+              "Por que agir agora.png" em F:\...\Fotos, copiado para
+              public/images/why-now/). Fonte é um retrato vertical muito
+              alto (941x1672, ~9:16) — usado em cheio ele dominaria a
+              seção e quebraria o equilíbrio com o grid de cards ao lado.
+              `aspect-[4/5]` + `object-cover` + `object-top` cortam a
+              parte de baixo (pernas), mantendo rosto/gesto/torso — exatamente
+              o pedido ("cortar um pouco da parte de baixo, para que ela
+              não fique tão grande verticalmente"). */}
+          <Reveal index={3}>
+            <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[var(--radius-card)]">
+              <Image
+                src="/images/why-now/por-que-agir-agora.png"
+                alt="Sidnei Rodrigues palestrando, gesticulando para a plateia"
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-top"
+              />
+            </div>
+          </Reveal>
+        </div>
 
         <ReasonsGrid />
       </div>
