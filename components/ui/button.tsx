@@ -78,6 +78,27 @@ const buttonVariants = cva(
           "h-[72px] gap-2.5 rounded-[var(--radius-block)] px-[34px] text-[19px] font-semibold has-data-[icon=inline-end]:pr-7 has-data-[icon=inline-start]:pl-7",
       },
     },
+    /**
+     * V22 (Caio, 2026-09-23 — "os CTAs que possuem degradê... deixe-os
+     * com menos arredondamento de borda, para parecer mais sério (não
+     * exagere) e aumente a fonte para 24px"): escopado só ao próprio
+     * `variant="gradient"` via compound variant (não ao token
+     * compartilhado das `size`s `cta`/`cta-lg`, que também servem
+     * botões `outline`/`solid-amber` fora deste pedido) — `--radius-cta`
+     * (14px, novo token) substitui o `--radius-block` (25px) herdado da
+     * size, e `text-2xl` (24px) substitui o `text-sm`/`text-[19px]` da
+     * size. Ambos vencem por ordem de origem (compound vem depois de
+     * `size` na concatenação do cva). O CTA compacto do header
+     * (site-header.tsx, `size` default + `text-sm` próprio) mantém a
+     * fonte pequena de propósito — só o raio foi igualado lá, à parte,
+     * porque aquele botão já define seu próprio className.
+     */
+    compoundVariants: [
+      {
+        variant: "gradient",
+        className: "rounded-[var(--radius-cta)] text-2xl",
+      },
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",

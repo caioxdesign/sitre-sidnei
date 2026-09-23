@@ -97,7 +97,7 @@ export function SiteHeader() {
             render={<a href="#captacao" />}
             variant="gradient"
             nativeButton={false}
-            className="hidden rounded-[var(--radius-block)] text-sm sm:inline-flex"
+            className="hidden rounded-[var(--radius-cta)] text-sm sm:inline-flex"
           >
             Convidar Sidnei
           </Button>

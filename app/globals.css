@@ -41,7 +41,19 @@
   --paper-50: #f8f9fb;
   --ink-950: #140e0c;
 
-  --gradient-institutional: linear-gradient(135deg, #0f1b2b 0%, #00acd4 100%);
+  /* Lado escuro do gradiente (Caio, 2026-09-23 — "os CTAs que possuem
+     degradê não estão combinando muito com o fundo. note que a parte
+     escura é praticamente igual ao fundo do site"): a extremidade
+     escura original (#0f1b2b) é o valor EXATO de --navy-900, que por
+     sua vez é --surface-page — o fundo real de hero.tsx, do header
+     (site-header.tsx) e da seção Prova Social (tone="dark"), onde os 3
+     CTAs em `variant="gradient"` (ver button.tsx) aparecem. O lado
+     escuro do botão literalmente desaparecia contra esses fundos,
+     sobrando só a mancha ciã visível. Trocado para --navy-700
+     (#1e3550), visivelmente mais claro que --navy-900/--navy-950 (os
+     fundos onde o CTA aparece), sem soar "claro demais" — mantém o
+     mesmo par de cores da marca, só resolve o contraste. */
+  --gradient-institutional: linear-gradient(135deg, var(--navy-700) 0%, var(--cyan-500) 100%);
 
   /* --- Cor: tokens semânticos --- */
   --surface-page: var(--navy-900);
@@ -198,6 +210,14 @@
   --radius-card: 18px;
   --radius-block: 25px;
   --radius-pill: 999px;
+  /* --radius-cta (Caio, 2026-09-23 — "os CTAs com degradê... deixe-os
+     com menos arredondamento de borda, para parecer mais sério (não
+     exagere)"): raio dedicado só para os CTAs em `variant="gradient"`
+     (ver button.tsx) — não reaproveita --radius-block (25px) porque esse
+     token também é usado por elementos sem relação nenhuma com botão
+     (ex.: painel de foto de about.tsx, card de sucesso de lead-form.tsx)
+     que não fazem parte deste pedido. */
+  --radius-cta: 14px;
 
   /* --- Composição diagonal "Horizonte de Decisão" (Gate 1, Probe C) ---
      --cut-tilt é o deslocamento horizontal do topo à base da costura
