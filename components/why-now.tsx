@@ -87,6 +87,21 @@ import { SectionHeading } from "@/components/section-heading";
  * correspondia a nenhum dos 4 novos textos), `Target` entra para
  * "Cenários que viram prioridades de alto impacto"; gradientes/cores
  * mantidos inalterados, só a associação texto->ícone muda.
+ *
+ * V24 (Caio, 2026-09-23 — 1ª tentativa de encaixar a foto "Por que agir
+ * agora.png" foi um pequeno retângulo `max-w-sm`/`aspect-[4/5]` boiando
+ * sozinho abaixo do subtítulo, fora do grid de cards, com o tom quente
+ * da foto de palco (pele, luz âmbar) batendo de frente com a paleta
+ * fria navy/cyan dos 4 cards ao lado — resultado: "do jeito que está eu
+ * ODIEI"). Redesenhado para pertencer à MESMA família visual dos 4
+ * cards `REASONS` em vez de ser um elemento à parte: a foto vira uma
+ * 5ª célula do próprio grid (`row-span-2` em desktop, mesma borda
+ * arredondada `--radius-card`), com um overlay em gradiente navy/cyan
+ * por cima (mesmo vocabulário de cor dos gradientes de `REASONS`
+ * abaixo) que neutraliza o choque de temperatura de cor e dá à foto a
+ * mesma presença visual dos cards — não mais o menor elemento da
+ * composição. A coluna de heading volta a ser só `SectionHeading`, sem
+ * wrapper/foto.
  */
 type Reason = {
   text: string;
@@ -189,29 +204,63 @@ function ReasonsGrid() {
   }, []);
 
   return (
-    <ul className="grid gap-5 sm:grid-cols-2 lg:w-[56%] lg:shrink-0">
-      {REASONS.map((reason, index) => (
-        <Reveal key={reason.text} index={index}>
-          <li
-            ref={(el) => {
-              itemRefs.current[index] = el;
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:w-[56%] lg:shrink-0 lg:grid-cols-3 lg:grid-rows-2">
+      {/* Foto de Sidnei como 5ª célula do grid, não um elemento à parte
+          (ver V24 acima). `lg:row-span-2` faz a célula esticar pela
+          altura das DUAS linhas de cards ao lado — um painel vertical,
+          coerente com a proporção original bem alta da foto-fonte
+          (941x1672). O overlay em gradiente reaproveita o mesmo
+          vocabulário navy/cyan dos `REASONS.gradient` abaixo: sem ele, o
+          tom quente de pele/luz de palco da foto lia como um elemento
+          de outra paleta cravado no meio dos 4 cards frios. */}
+      <Reveal index={0} className="sm:col-span-2 lg:col-span-1 lg:row-span-2">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-card)] lg:aspect-auto lg:h-full lg:min-h-[360px]">
+          <Image
+            src="/images/why-now/por-que-agir-agora.png"
+            alt="Sidnei Rodrigues palestrando, gesticulando para a plateia"
+            fill
+            sizes="(min-width: 1024px) 20vw, 100vw"
+            className="object-cover object-top"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(165deg, rgba(0,172,212,0.14) 0%, rgba(0,48,59,0.35) 45%, rgba(10,19,31,0.82) 100%)",
             }}
-            className="relative flex flex-col justify-start gap-6 self-start overflow-hidden rounded-[var(--radius-card)] p-7"
-            style={{ background: reason.gradient }}
-          >
-            <reason.icon
-              className="size-9 shrink-0"
-              style={{ color: reason.iconColor }}
-              strokeWidth={1.85}
-              aria-hidden="true"
-            />
-            <span className="text-body-lg font-medium text-[var(--on-dark)]">
-              {reason.text}
-            </span>
-          </li>
-        </Reveal>
-      ))}
-    </ul>
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-[var(--on-dark)]/10"
+          />
+        </div>
+      </Reveal>
+
+      <ul className="contents">
+        {REASONS.map((reason, index) => (
+          <Reveal key={reason.text} index={index + 1} className="lg:col-span-1">
+            <li
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
+              className="relative flex h-full flex-col justify-start gap-6 self-start overflow-hidden rounded-[var(--radius-card)] p-7"
+              style={{ background: reason.gradient }}
+            >
+              <reason.icon
+                className="size-9 shrink-0"
+                style={{ color: reason.iconColor }}
+                strokeWidth={1.85}
+                aria-hidden="true"
+              />
+              <span className="text-body-lg font-medium text-[var(--on-dark)]">
+                {reason.text}
+              </span>
+            </li>
+          </Reveal>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -222,36 +271,14 @@ export function WhyNow() {
       className="relative border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-14 lg:flex-row lg:items-center lg:gap-12">
-        <div className="flex flex-col gap-8 lg:w-[40%]">
-          <SectionHeading
-            tone="light"
-            eyebrow="Por que agir agora"
-            title="Estratégia, dados e decisão caminham juntos."
-            description="A tecnologia avançou, a forma de decidir precisa acompanhar. IA, dados e estratégia mudaram a forma de liderar e entender isso é o primeiro passo"
-            gap="gap-6"
-          />
-          {/* Foto abaixo do subtítulo (Caio, 2026-09-23 — "acho que
-              podemos encaixar uma imagem abaixo do subtítulo", arquivo
-              "Por que agir agora.png" em F:\...\Fotos, copiado para
-              public/images/why-now/). Fonte é um retrato vertical muito
-              alto (941x1672, ~9:16) — usado em cheio ele dominaria a
-              seção e quebraria o equilíbrio com o grid de cards ao lado.
-              `aspect-[4/5]` + `object-cover` + `object-top` cortam a
-              parte de baixo (pernas), mantendo rosto/gesto/torso — exatamente
-              o pedido ("cortar um pouco da parte de baixo, para que ela
-              não fique tão grande verticalmente"). */}
-          <Reveal index={3}>
-            <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[var(--radius-card)]">
-              <Image
-                src="/images/why-now/por-que-agir-agora.png"
-                alt="Sidnei Rodrigues palestrando, gesticulando para a plateia"
-                fill
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover object-top"
-              />
-            </div>
-          </Reveal>
-        </div>
+        <SectionHeading
+          tone="light"
+          eyebrow="Por que agir agora"
+          title="Estratégia, dados e decisão caminham juntos."
+          description="A tecnologia avançou, a forma de decidir precisa acompanhar. IA, dados e estratégia mudaram a forma de liderar e entender isso é o primeiro passo"
+          gap="gap-6"
+          className="lg:w-[40%]"
+        />
 
         <ReasonsGrid />
       </div>
