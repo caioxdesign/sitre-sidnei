@@ -109,6 +109,18 @@ export function LeadForm({ context, size = "default", className }: LeadFormProps
     isLg ? "text-body-lg" : "text-xs"
   );
   const calendarIconClass = isLg ? "size-6 right-4" : "size-4 right-3.5";
+  /**
+   * V18 (Caio, 2026-09-23 — "arrume o tamanho dos dropdowns em 'Tipo de
+   * Demanda'... precisam ter o mesmo tamanho de fonte"): a caixa do
+   * `SelectTrigger` já herdava `fieldClass` corretamente (mesmo padding/
+   * altura/fonte 27px dos outros campos — confirmado no DOM), mas as
+   * opções da lista aberta (`SelectItem`) tinham sua própria classe fixa
+   * `text-sm` (14px) no componente base (`ui/select.tsx`), nunca
+   * recebendo `size` — o menu abria com um tamanho de fonte visivelmente
+   * menor que o campo que o abriu. `itemClass` aplica o mesmo `.text-
+   * body-lg` + padding maior só quando `size="lg"`.
+   */
+  const itemClass = isLg ? "text-body-lg py-2.5 pr-10 pl-3" : undefined;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -194,9 +206,15 @@ export function LeadForm({ context, size = "default", className }: LeadFormProps
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="palestra">Palestra</SelectItem>
-              <SelectItem value="consultoria">Consultoria</SelectItem>
-              <SelectItem value="workshop">Workshop</SelectItem>
+              <SelectItem value="palestra" className={itemClass}>
+                Palestra
+              </SelectItem>
+              <SelectItem value="consultoria" className={itemClass}>
+                Consultoria
+              </SelectItem>
+              <SelectItem value="workshop" className={itemClass}>
+                Workshop
+              </SelectItem>
             </SelectContent>
           </Select>
           {/*
