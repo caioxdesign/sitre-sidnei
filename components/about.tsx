@@ -160,6 +160,24 @@ import { SectionHeading } from "@/components/section-heading";
  * 65% em desktop) e o mesmo `maskImage` de opacidade 100%->0% que gera
  * o degradê ao se aproximar do texto, sem nenhuma outra alteração de
  * layout.
+ *
+ * Redução de zoom (Caio, 2026-09-23 — "a imagem foi com muito zoom,
+ * diminua esse zoom em aproximadamente 25%"): com `object-cover`, a
+ * imagem já cobre a coluna no mínimo necessário — não há como "afastar"
+ * sem introduzir vãos, a não ser mudando a proporção da própria coluna.
+ * Como a foto (1264x848, paisagem) é encaixada numa coluna mais alta
+ * que larga, o corte é só horizontal (a altura inteira da foto já
+ * aparece); alargar a coluna revela mais da largura original na mesma
+ * proporção linear — por isso a coluna vai de 65% para 81% (+25%
+ * relativo, mesma técnica de ajuste por largura já usada nas rodadas
+ * V20c/d/e desta seção), sem tocar na altura nem na coluna de texto.
+ * Único ajuste dependente: os stops do `maskImage` são percentuais
+ * relativos à LARGURA DA PRÓPRIA COLUNA — como ela ficou mais larga em
+ * pixels absolutos, os stops antigos (55%/92%) deixavam o degradê
+ * terminar dentro da área onde o texto começa (medido ao vivo: ~54% do
+ * caminho do fade, não totalmente transparente ainda). Reduzidos para
+ * 42%/70% para o fade terminar antes da coluna de texto, com a mesma
+ * margem de segurança que a versão em 65% já tinha.
  */
 export function About() {
   return (
@@ -178,20 +196,20 @@ export function About() {
           composição. */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 z-0 w-full lg:w-[65%]"
+        className="absolute inset-y-0 left-0 z-0 w-full lg:w-[81%]"
       >
         <Image
           src="/images/quem-e/quem-sou.png"
           alt=""
           fill
           quality={95}
-          sizes="(min-width: 1024px) 65vw, 100vw"
+          sizes="(min-width: 1024px) 81vw, 100vw"
           className="object-cover object-[center_25%]"
           style={{
             maskImage:
-              "linear-gradient(90deg, black 0%, black 55%, transparent 92%)",
+              "linear-gradient(90deg, black 0%, black 42%, transparent 70%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, black 0%, black 55%, transparent 92%)",
+              "linear-gradient(90deg, black 0%, black 42%, transparent 70%)",
           }}
         />
       </div>
