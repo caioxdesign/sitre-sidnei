@@ -161,23 +161,30 @@ import { SectionHeading } from "@/components/section-heading";
  * o degradê ao se aproximar do texto, sem nenhuma outra alteração de
  * layout.
  *
- * Redução de zoom (Caio, 2026-09-23 — "a imagem foi com muito zoom,
- * diminua esse zoom em aproximadamente 25%"): com `object-cover`, a
- * imagem já cobre a coluna no mínimo necessário — não há como "afastar"
- * sem introduzir vãos, a não ser mudando a proporção da própria coluna.
- * Como a foto (1264x848, paisagem) é encaixada numa coluna mais alta
- * que larga, o corte é só horizontal (a altura inteira da foto já
- * aparece); alargar a coluna revela mais da largura original na mesma
- * proporção linear — por isso a coluna vai de 65% para 81% (+25%
- * relativo, mesma técnica de ajuste por largura já usada nas rodadas
- * V20c/d/e desta seção), sem tocar na altura nem na coluna de texto.
- * Único ajuste dependente: os stops do `maskImage` são percentuais
- * relativos à LARGURA DA PRÓPRIA COLUNA — como ela ficou mais larga em
- * pixels absolutos, os stops antigos (55%/92%) deixavam o degradê
- * terminar dentro da área onde o texto começa (medido ao vivo: ~54% do
- * caminho do fade, não totalmente transparente ainda). Reduzidos para
- * 42%/70% para o fade terminar antes da coluna de texto, com a mesma
- * margem de segurança que a versão em 65% já tinha.
+ * Redução de zoom, 1ª tentativa (Caio, 2026-09-23 — "a imagem foi com
+ * muito zoom, diminua esse zoom em aproximadamente 25%") — REVERTIDA a
+ * pedido de Caio ("você fez o oposto, deixou a imagem ainda maior"):
+ * larguei a coluna de 65% para 81%, o que só revela mais das BORDAS
+ * (esquerda/direita) da foto — o rosto continua exatamente do mesmo
+ * tamanho em pixels (a altura da coluna, que é quem define a escala
+ * aqui, não mudou), e a coluna inteira fica maior/mais dominante na
+ * tela. Resultado: nada de "menos zoom no rosto", só um painel maior.
+ *
+ * Redução de zoom, 2ª tentativa (correta): com `object-cover`, quem
+ * define a escala (o quão grande o rosto aparece em pixels) é a
+ * dimensão que força o corte — aqui é a ALTURA da coluna (a foto,
+ * 1264x848 paisagem, é encaixada numa coluna mais alta que larga, então
+ * a altura da coluna é sempre 100% preenchida pela altura inteira da
+ * foto, e é ela quem dita a escala). Para o rosto aparecer ~25% menor
+ * (mostrando mais do homem, não mais das bordas), é a ALTURA da coluna
+ * que precisa diminuir ~25% — largura volta a 65% (revertida). A coluna
+ * deixa de ocupar a altura inteira da seção (`inset-y-0`) e passa a
+ * `lg:h-[75%]` ancorada no topo (`lg:top-0`), preservando a cabeça no
+ * topo do enquadramento; o vão que sobra embaixo (25% da altura da
+ * seção, fundo escuro da própria seção) ganha um degradê vertical
+ * próprio (`bottomFade`, elemento irmão, não faz parte da máscara da
+ * imagem) para a transição continuar suave, sem nenhuma linha reta —
+ * mesmo princípio já usado no degradê horizontal à direita.
  */
 export function About() {
   return (
@@ -196,21 +203,29 @@ export function About() {
           composição. */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 z-0 w-full lg:w-[81%]"
+        className="absolute inset-y-0 left-0 z-0 w-full lg:inset-y-auto lg:top-0 lg:h-[75%] lg:w-[65%]"
       >
         <Image
           src="/images/quem-e/quem-sou.png"
           alt=""
           fill
           quality={95}
-          sizes="(min-width: 1024px) 81vw, 100vw"
+          sizes="(min-width: 1024px) 65vw, 100vw"
           className="object-cover object-[center_25%]"
           style={{
             maskImage:
-              "linear-gradient(90deg, black 0%, black 42%, transparent 70%)",
+              "linear-gradient(90deg, black 0%, black 55%, transparent 92%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, black 0%, black 42%, transparent 70%)",
+              "linear-gradient(90deg, black 0%, black 55%, transparent 92%)",
           }}
+        />
+        {/* Degradê vertical — só existe em desktop (a coluna só encolhe
+            de altura em lg:), esmaece a borda inferior da foto para o
+            fundo escuro da seção, mesmo tratamento do degradê horizontal
+            acima (sem linha reta). */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 hidden h-24 bg-gradient-to-b from-transparent to-[var(--surface-page)] lg:block"
         />
       </div>
 
