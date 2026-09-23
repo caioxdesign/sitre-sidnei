@@ -160,31 +160,6 @@ import { SectionHeading } from "@/components/section-heading";
  * 65% em desktop) e o mesmo `maskImage` de opacidade 100%->0% que gera
  * o degradê ao se aproximar do texto, sem nenhuma outra alteração de
  * layout.
- *
- * Redução de zoom, 1ª tentativa (Caio, 2026-09-23 — "a imagem foi com
- * muito zoom, diminua esse zoom em aproximadamente 25%") — REVERTIDA a
- * pedido de Caio ("você fez o oposto, deixou a imagem ainda maior"):
- * larguei a coluna de 65% para 81%, o que só revela mais das BORDAS
- * (esquerda/direita) da foto — o rosto continua exatamente do mesmo
- * tamanho em pixels (a altura da coluna, que é quem define a escala
- * aqui, não mudou), e a coluna inteira fica maior/mais dominante na
- * tela. Resultado: nada de "menos zoom no rosto", só um painel maior.
- *
- * Redução de zoom, 2ª tentativa (correta): com `object-cover`, quem
- * define a escala (o quão grande o rosto aparece em pixels) é a
- * dimensão que força o corte — aqui é a ALTURA da coluna (a foto,
- * 1264x848 paisagem, é encaixada numa coluna mais alta que larga, então
- * a altura da coluna é sempre 100% preenchida pela altura inteira da
- * foto, e é ela quem dita a escala). Para o rosto aparecer ~25% menor
- * (mostrando mais do homem, não mais das bordas), é a ALTURA da coluna
- * que precisa diminuir ~25% — largura volta a 65% (revertida). A coluna
- * deixa de ocupar a altura inteira da seção (`inset-y-0`) e passa a
- * `lg:h-[75%]` ancorada no topo (`lg:top-0`), preservando a cabeça no
- * topo do enquadramento; o vão que sobra embaixo (25% da altura da
- * seção, fundo escuro da própria seção) ganha um degradê vertical
- * próprio (`bottomFade`, elemento irmão, não faz parte da máscara da
- * imagem) para a transição continuar suave, sem nenhuma linha reta —
- * mesmo princípio já usado no degradê horizontal à direita.
  */
 export function About() {
   return (
@@ -203,7 +178,7 @@ export function About() {
           composição. */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 z-0 w-full lg:inset-y-auto lg:top-0 lg:h-[75%] lg:w-[65%]"
+        className="absolute inset-y-0 left-0 z-0 w-full lg:w-[65%]"
       >
         <Image
           src="/images/quem-e/quem-sou.png"
@@ -218,14 +193,6 @@ export function About() {
             WebkitMaskImage:
               "linear-gradient(90deg, black 0%, black 55%, transparent 92%)",
           }}
-        />
-        {/* Degradê vertical — só existe em desktop (a coluna só encolhe
-            de altura em lg:), esmaece a borda inferior da foto para o
-            fundo escuro da seção, mesmo tratamento do degradê horizontal
-            acima (sem linha reta). */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 hidden h-24 bg-gradient-to-b from-transparent to-[var(--surface-page)] lg:block"
         />
       </div>
 
