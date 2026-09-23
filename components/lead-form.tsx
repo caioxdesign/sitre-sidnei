@@ -270,7 +270,18 @@ export function LeadForm({ context, size = "default", className }: LeadFormProps
           deve estar ao lado do CTA 'enviar solicitação'"): movido do
           rodapé (site-footer.tsx) para cá, lado a lado com o submit —
           só no contexto "captacao" (o Press Kit já é o próprio contexto
-          de quem quer material de apoio, não precisa do botão duplicado). */}
+          de quem quer material de apoio, não precisa do botão duplicado).
+          V23 (Caio, 2026-09-23 — "aplique o mesmo tamanho e arredondamento
+          de bordas [do CTA com degradê] para 'baixar material em pdf'...
+          aplique um hover que o botão fica levemente mais claro"): mesmo
+          `--radius-cta` (14px) e `text-2xl` (24px) do CTA de degradê ao
+          lado, aplicados aqui via className (size="cta" continua herdando
+          o resto: altura/padding). Hover trocado de `hover:bg-[var(--navy-
+          800)]` para `hover:bg-[var(--on-dark)]/10` — o valor antigo não
+          tinha efeito visível nesta seção porque o fundo já É
+          --surface-raised (navy-800): preencher com a MESMA cor do fundo
+          ao redor não clareava nada. Um overlay branco translúcido clareia
+          de forma consistente em qualquer fundo em que o botão apareça. */}
       <div className="flex flex-wrap items-center gap-4">
         <Button type="submit" variant="gradient" size="cta" className="w-fit">
           {tipo === "palestra" ? "Convide Sidnei para seu evento" : "Enviar solicitação"}
@@ -281,9 +292,9 @@ export function LeadForm({ context, size = "default", className }: LeadFormProps
             nativeButton={false}
             variant="outline"
             size="cta"
-            className="w-fit border-[var(--border-dark)] bg-transparent text-[var(--on-dark)] hover:bg-[var(--navy-800)]"
+            className="w-fit rounded-[var(--radius-cta)] border-[var(--border-dark)] bg-transparent text-2xl text-[var(--on-dark)] transition-colors duration-[var(--motion-fast)] ease-[var(--ease-standard)] hover:bg-[var(--on-dark)]/10"
           >
-            <Download className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            <Download className="size-6" strokeWidth={1.75} aria-hidden="true" />
             Baixar material em PDF
           </Button>
         ) : null}
