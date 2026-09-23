@@ -165,7 +165,7 @@ export function About() {
   return (
     <section
       id="sobre"
-      className="relative overflow-hidden border-t border-[var(--border-dark)] bg-[var(--surface-page)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="relative overflow-hidden border-t border-[var(--border-dark)] bg-[var(--surface-page)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       {/* Composição única fornecida por Caio (V20) — substitui as 4
           camadas CSS anteriores (costura + campo/duotone + faceta SVG +

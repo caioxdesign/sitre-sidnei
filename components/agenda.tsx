@@ -33,7 +33,7 @@ export function Agenda() {
   return (
     <section
       id="agenda"
-      className="border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-12">
         <SectionHeading tone="light" eyebrow="Agenda" title="Próximas apresentações" />

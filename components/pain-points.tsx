@@ -68,7 +68,7 @@ export function PainPoints() {
   return (
     <section
       id="barreiras"
-      className="relative border-t border-[var(--border-dark)] bg-[var(--surface-page)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="relative border-t border-[var(--border-dark)] bg-[var(--surface-page)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-12">
         <SectionHeading

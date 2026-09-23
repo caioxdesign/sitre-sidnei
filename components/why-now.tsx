@@ -275,7 +275,7 @@ export function WhyNow() {
   return (
     <section
       id="por-que-agora"
-      className="relative border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="relative border-t border-[var(--border-light)] bg-[var(--surface-light)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-14 lg:flex-row lg:items-stretch lg:gap-12">
         <div className="flex flex-col gap-10 lg:w-[54%] lg:shrink-0">

@@ -61,7 +61,7 @@ export function LeadCapture() {
   return (
     <section
       id="captacao"
-      className="relative overflow-hidden border-t border-[var(--border-dark)] bg-[var(--surface-raised)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="relative overflow-hidden border-t border-[var(--border-dark)] bg-[var(--surface-raised)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div className="relative mx-auto flex max-w-[1760px] flex-col gap-12 lg:flex-row lg:gap-16">
         <div className="flex flex-col gap-8 lg:w-[42%]">

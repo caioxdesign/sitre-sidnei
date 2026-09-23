@@ -65,7 +65,7 @@ export function SocialProof() {
   return (
     <section
       id="prova-social"
-      className="relative overflow-hidden bg-[var(--surface-page)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="relative overflow-hidden bg-[var(--surface-page)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div aria-hidden="true" className="seam-line absolute inset-x-0 top-0" />
       <div aria-hidden="true" className="seam-line absolute inset-x-0 bottom-0" />

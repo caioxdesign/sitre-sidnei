@@ -40,7 +40,7 @@ export function BeforeAfter() {
   return (
     <section
       id="antes-depois"
-      className="bg-[var(--surface-light)] px-6 py-8 sm:px-10 sm:py-10 lg:px-12"
+      className="bg-[var(--surface-light)] px-6 py-12 sm:px-10 sm:py-16 lg:px-12"
     >
       <div className="mx-auto flex max-w-[1760px] flex-col gap-12">
         <SectionHeading

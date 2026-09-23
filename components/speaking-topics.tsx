@@ -140,7 +140,7 @@ export function SpeakingTopics() {
         </div>
       </div>
 
-      <div className="px-6 pb-8 pt-4 sm:px-10 sm:pb-10 lg:px-12">
+      <div className="px-6 pb-12 pt-4 sm:px-10 sm:pb-16 lg:px-12">
         <div className="mx-auto flex max-w-[1760px] flex-col gap-12">
           <SectionHeading
             tone="light"
