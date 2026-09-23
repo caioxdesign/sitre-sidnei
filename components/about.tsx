@@ -153,6 +153,13 @@ import { SectionHeading } from "@/components/section-heading";
  * impacto." para "Não basta planejar. É preciso implementar." — o
  * destaque âmbar (antes em "impacto") migra para "implementar", palavra
  * que Caio pediu para ficar em foco.
+ *
+ * Troca de foto (Caio, 2026-09-23 — "aplique... a foto de nome 'Quem
+ * Sou'"): `referencia-v2.png` sai, `quem-sou.png` entra no mesmo lugar
+ * — mesmas dimensões (`fill` + `object-cover`, coluna full-bleed até
+ * 65% em desktop) e o mesmo `maskImage` de opacidade 100%->0% que gera
+ * o degradê ao se aproximar do texto, sem nenhuma outra alteração de
+ * layout.
  */
 export function About() {
   return (
@@ -174,7 +181,7 @@ export function About() {
         className="absolute inset-y-0 left-0 z-0 w-full lg:w-[65%]"
       >
         <Image
-          src="/images/quem-e/referencia-v2.png"
+          src="/images/quem-e/quem-sou.png"
           alt=""
           fill
           quality={95}
