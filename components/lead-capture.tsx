@@ -81,7 +81,7 @@ export function LeadCapture() {
           <SectionHeading
             tone="dark"
             eyebrow="Contato"
-            title="Solicite uma palestra para o seu evento"
+            title={"Solicite uma palestra para o seu evento"}
             description="Conte um pouco sobre a demanda — a equipe retorna para dar sequência."
           />
         </div>

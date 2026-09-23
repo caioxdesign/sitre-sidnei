@@ -74,7 +74,8 @@ export function PainPoints() {
         <SectionHeading
           tone="dark"
           eyebrow="O ponto de partida"
-          title="O que separa intenção de resultado"
+          title={"O que separa intenção de resultado"}
+          titleClassName="max-w-4xl"
           description="Quatro pilares que sustentam o trabalho dentro das organizações."
         />
 

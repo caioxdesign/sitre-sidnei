@@ -282,7 +282,7 @@ export function WhyNow() {
           <SectionHeading
             tone="light"
             eyebrow="Por que agir agora"
-            title="Estratégia, dados e decisão caminham juntos."
+            title={"Estratégia, dados e decisão caminham juntos."}
             description="A tecnologia avançou, a forma de decidir precisa acompanhar. IA, dados e estratégia mudaram a forma de liderar e entender isso é o primeiro passo"
             gap="gap-6"
           />

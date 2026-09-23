@@ -145,7 +145,7 @@ export function SpeakingTopics() {
           <SectionHeading
             tone="light"
             eyebrow="Temas de Palestra"
-            title="O que Sidnei leva ao palco"
+            title={"O que Sidnei leva ao palco"}
           />
 
           <div className="grid gap-6 sm:grid-cols-3">
