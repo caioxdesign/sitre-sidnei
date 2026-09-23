@@ -58,10 +58,18 @@ import {
 // pelas novas capas fornecidas (mesmo nome de arquivo, só o conteúdo
 // da imagem muda — nenhuma alteração de caminho aqui). As versões
 // "-sem-texto" usadas no modal não foram tocadas (Caio só mencionou
-// capas). CTA "Ver mais": fonte sobe de text-sm para text-base
-// ("deixe-o com a fonte um pouquinho maior"); o ícone da seta
-// (`ArrowUpRight`, lucide-react) já era Lucide e já tinha o ângulo
-// diagonal pedido — nenhuma troca de ícone foi necessária.
+// capas). CTA "Ver mais", 1ª rodada: fonte sobe de text-sm para
+// text-base ("deixe-o com a fonte um pouquinho maior").
+//
+// CTA "Ver mais", 2ª rodada (Caio, 2026-09-23 — "coloque a fonte dos
+// botões em 20px e aumente a seta e sua grossura, para que fique
+// harmônica em relação ao texto"): fonte sobe de text-base (16px) para
+// text-xl (20px, valor exato pedido). Ícone acompanha na mesma
+// proporção (16px -> 20px, `size-4` -> `size-5`) e ganha mais peso
+// (`strokeWidth` 2 -> 2.5) para não parecer fino ao lado do texto
+// maior. Padding/gap também sobem um degrau (px-7 py-3.5 -> px-8 py-4,
+// gap-2 -> gap-2.5) para o botão continuar proporcional ao texto maior,
+// sem apertar.
 const TOPICS = [
   {
     value: "governanca-ia",
@@ -157,12 +165,12 @@ export function SpeakingTopics() {
                         pedido explicitamente só para este botão. */}
                     <span
                       aria-hidden="true"
-                      className="absolute bottom-5 left-5 z-[1] inline-flex items-center gap-2 rounded-[12px] bg-[var(--on-dark)]/25 px-7 py-3.5 text-base font-semibold text-[var(--on-dark)] backdrop-blur-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:bg-[var(--on-dark)]/35"
+                      className="absolute bottom-5 left-5 z-[1] inline-flex items-center gap-2.5 rounded-[12px] bg-[var(--on-dark)]/25 px-8 py-4 text-xl font-semibold text-[var(--on-dark)] backdrop-blur-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:bg-[var(--on-dark)]/35"
                     >
                       Ver mais
                       <ArrowUpRight
-                        className="size-4 transition-transform duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        strokeWidth={2}
+                        className="size-5 transition-transform duration-[var(--motion-fast)] ease-[var(--ease-out-soft)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        strokeWidth={2.5}
                       />
                     </span>
                   </DialogTrigger>
