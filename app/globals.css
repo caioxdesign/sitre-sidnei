@@ -420,11 +420,19 @@
     font-weight: 800;
     letter-spacing: -0.02em;
   }
+  /* `font-weight` removido (Caio, 2026-09-23 — pedido de aumentar/engrossar
+     os títulos de vídeo em social-proof.tsx): esta classe fixava
+     `font-weight: 400` e, por vir depois de `.font-semibold`/`.font-medium`
+     na mesma camada `utilities`, sempre vencia por ordem de origem —
+     qualquer elemento combinando `text-body-lg` com um peso de fonte
+     (já o caso em pain-points.tsx e why-now.tsx, ambos em produção)
+     ficava preso em 400 independente da classe de peso pedida. O peso
+     agora é herdado normalmente do documento (400) e só muda quando o
+     consumidor pede explicitamente via `font-medium`/`font-semibold`/etc. */
   .text-body-lg {
     font-family: var(--font-body);
     font-size: var(--type-body-lg-size);
     line-height: 1.6;
-    font-weight: 400;
   }
   .text-body {
     font-family: var(--font-body);

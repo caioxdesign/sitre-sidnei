@@ -87,7 +87,7 @@ export function SocialProof() {
                 videoSrc={video.videoSrc}
                 showRegistrationMarks={index === 0}
               />
-              <p className="text-body font-medium text-[var(--on-dark)]">
+              <p className="text-body-lg font-semibold text-[var(--on-dark)]">
                 {video.label}
               </p>
             </Reveal>
