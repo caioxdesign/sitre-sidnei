@@ -30,6 +30,15 @@ type LeadFormProps = {
    * demanda por quem já sabe o que quer (organizador avançado).
    */
   context: "captacao" | "press-kit";
+  /**
+   * "lg" (Caio, 2026-09-23 — sessão "Contato": "os textos do formulário
+   * devem ter o mesmo tamanho do texto do subtítulo"): rótulos e campos
+   * sobem de `text-xs`/`text-sm` para `.text-body-lg` (27px), igualando
+   * a descrição do `SectionHeading` ao lado. Opt-in por instância (não
+   * padrão) para não inflar o formulário do Press Kit, que vive dentro
+   * de um card bem menor e mais denso — só `lead-capture.tsx` pede "lg".
+   */
+  size?: "default" | "lg";
   className?: string;
 };
 
@@ -46,15 +55,8 @@ type LeadFormProps = {
  * (borda --border-dark, fundo navy-800/60, foco cyan-500) é preservada
  * — só a mecânica de override ficou correta.
  */
-const fieldClass =
-  "h-auto w-full rounded-[var(--radius-field)] border border-[var(--border-dark)] bg-[var(--navy-800)]/60 px-4 py-3 text-sm text-[var(--on-dark)] placeholder:text-[var(--on-dark-muted)] outline-none transition-colors duration-[var(--motion-fast)] ease-[var(--ease-standard)] focus-visible:border-[var(--cyan-500)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]";
-
-const selectTriggerClass = cn(
-  fieldClass,
-  "justify-between data-[size=default]:h-auto"
-);
-
-const labelClass = "text-xs font-semibold text-[var(--on-dark-muted)]";
+const fieldClassBase =
+  "h-auto w-full rounded-[var(--radius-field)] border border-[var(--border-dark)] bg-[var(--navy-800)]/60 text-[var(--on-dark)] placeholder:text-[var(--on-dark-muted)] outline-none transition-colors duration-[var(--motion-fast)] ease-[var(--ease-standard)] focus-visible:border-[var(--cyan-500)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]";
 
 /**
  * Formulário curto de captação — usado tanto pela seção Contato quanto
@@ -88,10 +90,25 @@ const labelClass = "text-xs font-semibold text-[var(--on-dark-muted)]";
  * sobreposto por cima, decorativo (`pointer-events-none`), na mesma cor
  * `--on-dark-muted` do resto do texto do formulário.
  */
-export function LeadForm({ context, className }: LeadFormProps) {
+export function LeadForm({ context, size = "default", className }: LeadFormProps) {
   const uid = useId();
   const [tipo, setTipo] = useState<DemandType>("");
   const [submitted, setSubmitted] = useState(false);
+
+  const isLg = size === "lg";
+  const fieldClass = cn(
+    fieldClassBase,
+    isLg ? "text-body-lg px-5 py-3.5" : "text-sm px-4 py-3"
+  );
+  const selectTriggerClass = cn(
+    fieldClass,
+    "justify-between data-[size=default]:h-auto"
+  );
+  const labelClass = cn(
+    "font-semibold text-[var(--on-dark-muted)]",
+    isLg ? "text-body-lg" : "text-xs"
+  );
+  const calendarIconClass = isLg ? "size-6 right-4" : "size-4 right-3.5";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -200,11 +217,15 @@ export function LeadForm({ context, className }: LeadFormProps) {
               type="date"
               className={cn(
                 fieldClass,
-                "pr-10 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
+                isLg ? "pr-12" : "pr-10",
+                "[&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
               )}
             />
             <CalendarIcon
-              className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-[var(--on-dark-muted)]"
+              className={cn(
+                "pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--on-dark-muted)]",
+                calendarIconClass
+              )}
               strokeWidth={1.75}
               aria-hidden="true"
             />

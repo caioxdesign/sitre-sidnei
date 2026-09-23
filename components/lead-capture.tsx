@@ -55,6 +55,19 @@ import { LeadForm } from "@/components/lead-form";
  * ainda `[DESCONHECIDO]`/"a confirmar") foi removido — a coluna
  * esquerda agora vai direto do `SectionHeading` para o formulário à
  * direita.
+ *
+ * V17 (Caio, 2026-09-23 — "arrume/aumente os textos do formulário...
+ * eles devem ter o mesmo tamanho do texto do subtítulo. remova o card
+ * grande com o conteúdo dos blocos de texto. cada conteúdo deve estar
+ * livre, na mesma organização, porém, sem estar dentro desse grande
+ * card"): o `div` que envolvia `LeadForm` inteiro num card único
+ * (`rounded-[var(--radius-block)] border ... bg-[var(--navy-800)]/60
+ * p-6 sm:p-8`) foi removido — os campos individuais já têm seu próprio
+ * fundo/borda (`fieldClass` em lead-form.tsx), então a organização em
+ * grid permanece idêntica, só sem o container extra por fora. Rótulos e
+ * campos sobem para `.text-body-lg` via novo prop `size="lg"` (ver
+ * lead-form.tsx) — sem afetar o formulário do Press Kit, que continua
+ * `size="default"`.
  */
 
 export function LeadCapture() {
@@ -74,9 +87,7 @@ export function LeadCapture() {
         </div>
 
         <Reveal index={0} className="lg:w-[58%]">
-          <div className="rounded-[var(--radius-block)] border border-[var(--border-dark)] bg-[var(--navy-800)]/60 p-6 sm:p-8">
-            <LeadForm context="captacao" />
-          </div>
+          <LeadForm context="captacao" size="lg" />
         </Reveal>
       </div>
     </section>
